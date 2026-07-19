@@ -42,7 +42,7 @@ class AppTheme {
       brightness: Brightness.light,
     );
     return ThemeData(
-      useMaterial3: true,
+      useMaterial3: false,
       colorScheme: scheme,
       scaffoldBackgroundColor: const Color(0xFFF7F8FA),
       fontFamily: 'Roboto',
