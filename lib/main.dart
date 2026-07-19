@@ -45,13 +45,11 @@ class KelasRapiApp extends StatelessWidget {
       themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
       supportedLocales: const [Locale('id', 'ID')],
       locale: const Locale('id', 'ID'),
-      // useMaterial3: true → sudah tidak berlaku, hapus
       home: const RootNav(),
     );
   }
 }
 
-// ========== Root Navigation dengan Bottom Navbar (Material 3) ==========
 class RootNav extends StatefulWidget {
   const RootNav({super.key});
 
@@ -71,32 +69,44 @@ class _RootNavState extends State<RootNav> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
         },
-        destinations: const [
-          NavigationDestination(
+        backgroundColor: isDark ? const Color(0xFF1A1D23) : Colors.white,
+        selectedItemColor: colorScheme.primary,
+        unselectedItemColor: colorScheme.onSurface.withOpacity(0.5),
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        elevation: 0,
+        items: const [
+          BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
             label: 'Home',
           ),
-          NavigationDestination(
+          BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month_rounded),
             label: 'Kalender',
           ),
-          NavigationDestination(
+          BottomNavigationBarItem(
             icon: Icon(Icons.cleaning_services_rounded),
             label: 'Piket',
           ),
-          NavigationDestination(
+          BottomNavigationBarItem(
             icon: Icon(Icons.settings_rounded),
             label: 'Pengaturan',
           ),
