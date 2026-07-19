@@ -45,6 +45,7 @@ class KelasRapiApp extends StatelessWidget {
       themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
       supportedLocales: const [Locale('id', 'ID')],
       locale: const Locale('id', 'ID'),
+      useMaterial3: true, // ⬅️ Aktifkan Material 3 untuk tampilan modern
       home: const RootNav(),
     );
   }
@@ -57,10 +58,11 @@ class RootNav extends StatefulWidget {
   State<RootNav> createState() => _RootNavState();
 }
 
-class _RootNavState extends State<RootNav> with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
+class _RootNavState extends State<RootNav> {
+  int _currentIndex = 0;
 
-  final _pages = const [
+  // Daftar halaman (dipertahankan dengan IndexedStack agar state tetap hidup)
+  final List<Widget> _pages = const [
     HomeScreen(),
     CalendarScreen(),
     PiketScreen(),
@@ -68,42 +70,37 @@ class _RootNavState extends State<RootNav> with SingleTickerProviderStateMixin {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: _pages.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        toolbarHeight: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: scheme.primary,
-          unselectedLabelColor: scheme.onSurface.withOpacity(0.5),
-          indicatorColor: scheme.primary,
-          tabs: const [
-            Tab(icon: Icon(Icons.home_rounded), text: 'Home'),
-            Tab(icon: Icon(Icons.calendar_month_rounded), text: 'Kalender'),
-            Tab(icon: Icon(Icons.cleaning_services_rounded), text: 'Piket'),
-            Tab(icon: Icon(Icons.settings_rounded), text: 'Pengaturan'),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        physics: const NeverScrollableScrollPhysics(),
+      body: IndexedStack(
+        index: _currentIndex,
         children: _pages,
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_rounded),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.calendar_month_rounded),
+            label: 'Kalender',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.cleaning_services_rounded),
+            label: 'Piket',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_rounded),
+            label: 'Pengaturan',
+          ),
+        ],
       ),
     );
   }
