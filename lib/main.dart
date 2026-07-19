@@ -38,7 +38,7 @@ class KelasRapiApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsService>();
     return MaterialApp(
-      title: 'Kelas Rapi',
+      title: 'XI RPL B',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(settings.color),
       darkTheme: AppTheme.dark(settings.color),
@@ -57,8 +57,8 @@ class RootNav extends StatefulWidget {
   State<RootNav> createState() => _RootNavState();
 }
 
-class _RootNavState extends State<RootNav> {
-  int _index = 0;
+class _RootNavState extends State<RootNav> with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
 
   final _pages = const [
     HomeScreen(),
@@ -68,30 +68,42 @@ class _RootNavState extends State<RootNav> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _pages.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      body: IndexedStack(index: _index, children: _pages),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: const [
-          NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home_rounded),
-              label: 'Home'),
-          NavigationDestination(
-              icon: Icon(Icons.calendar_month_outlined),
-              selectedIcon: Icon(Icons.calendar_month_rounded),
-              label: 'Kalender'),
-          NavigationDestination(
-              icon: Icon(Icons.cleaning_services_outlined),
-              selectedIcon: Icon(Icons.cleaning_services_rounded),
-              label: 'Piket'),
-          NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings_rounded),
-              label: 'Pengaturan'),
-        ],
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        toolbarHeight: 0,
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: scheme.primary,
+          unselectedLabelColor: scheme.onSurface.withOpacity(0.5),
+          indicatorColor: scheme.primary,
+          tabs: const [
+            Tab(icon: Icon(Icons.home_rounded), text: 'Home'),
+            Tab(icon: Icon(Icons.calendar_month_rounded), text: 'Kalender'),
+            Tab(icon: Icon(Icons.cleaning_services_rounded), text: 'Piket'),
+            Tab(icon: Icon(Icons.settings_rounded), text: 'Pengaturan'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: _pages,
       ),
     );
   }
