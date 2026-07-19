@@ -67,50 +67,34 @@ class _RootNavState extends State<RootNav> {
     SettingsScreen(),
   ];
 
+  // Daftar menu untuk popup
+  final List<PopupMenuItem<int>> _menuItems = const [
+    PopupMenuItem(value: 0, child: ListTile(leading: Icon(Icons.home_rounded), title: Text('Home'))),
+    PopupMenuItem(value: 1, child: ListTile(leading: Icon(Icons.calendar_month_rounded), title: Text('Kalender'))),
+    PopupMenuItem(value: 2, child: ListTile(leading: Icon(Icons.cleaning_services_rounded), title: Text('Piket'))),
+    PopupMenuItem(value: 3, child: ListTile(leading: Icon(Icons.settings_rounded), title: Text('Pengaturan'))),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
-
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: const Text('XI RPL B'),
+        actions: [
+          PopupMenuButton<int>(
+            icon: const Icon(Icons.more_vert_rounded),
+            onSelected: (value) {
+              setState(() {
+                _currentIndex = value;
+              });
+            },
+            itemBuilder: (context) => _menuItems,
+          ),
+        ],
+      ),
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        backgroundColor: isDark ? const Color(0xFF1A1D23) : Colors.white,
-        selectedItemColor: colorScheme.primary,
-        unselectedItemColor: colorScheme.onSurface.withOpacity(0.5),
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        elevation: 0,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_rounded),
-            label: 'Kalender',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.cleaning_services_rounded),
-            label: 'Piket',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_rounded),
-            label: 'Pengaturan',
-          ),
-        ],
       ),
     );
   }
