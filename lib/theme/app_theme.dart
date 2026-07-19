@@ -53,7 +53,7 @@ class AppTheme {
         centerTitle: false,
         scrolledUnderElevation: 0,
       ),
-      cardTheme: CardThemeData(
+      cardTheme: CardTheme(
         elevation: 0,
         color: Colors.white,
         surfaceTintColor: Colors.transparent,
@@ -90,7 +90,7 @@ class AppTheme {
         centerTitle: false,
         scrolledUnderElevation: 0,
       ),
-      cardTheme: CardThemeData(
+      cardTheme: CardTheme(
         elevation: 0,
         color: const Color(0xFF1A1D23),
         surfaceTintColor: Colors.transparent,
