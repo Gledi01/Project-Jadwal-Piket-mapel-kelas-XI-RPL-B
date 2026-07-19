@@ -45,12 +45,13 @@ class KelasRapiApp extends StatelessWidget {
       themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
       supportedLocales: const [Locale('id', 'ID')],
       locale: const Locale('id', 'ID'),
-      useMaterial3: true, // ⬅️ Aktifkan Material 3 untuk tampilan modern
+      // useMaterial3: true → sudah tidak berlaku, hapus
       home: const RootNav(),
     );
   }
 }
 
+// ========== Root Navigation dengan Bottom Navbar (Material 3) ==========
 class RootNav extends StatefulWidget {
   const RootNav({super.key});
 
@@ -61,7 +62,6 @@ class RootNav extends StatefulWidget {
 class _RootNavState extends State<RootNav> {
   int _currentIndex = 0;
 
-  // Daftar halaman (dipertahankan dengan IndexedStack agar state tetap hidup)
   final List<Widget> _pages = const [
     HomeScreen(),
     CalendarScreen(),
